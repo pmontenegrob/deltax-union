@@ -84,12 +84,15 @@ WSMETHOD GET WSRECEIVE limit, offset, cfecha WSSERVICE dxpedidos
 		SD2.D2_LOTECTL AS LOTE,
 		SD2.D2_DTVALID AS VENCTO,
 		SD2.D2_QUANT AS CANTIDAD,
-		SC5.C5_USRREG  AS NOMBRE_EDV
+		SA3.A3_NOME  AS NOMBRE_EDV,
+		SA3.A3_TEL AS CELULAR_EDV,
+		SA3.A3_EMAIL AS EMAIL_EDV
 		FROM SD2010 SD2  
 		left join SC5010 SC5 ON SC5.C5_NUM = SD2.D2_PEDIDO AND SC5.D_E_L_E_T_ =' ' AND SC5.C5_FILIAL = SD2.D2_FILIAL
 		left join SF2010 SF2 ON SF2.F2_DOC  = SD2.D2_DOC  AND SF2.D_E_L_E_T_ =' ' AND SF2.F2_SERIE  = SD2.D2_SERIE 
 		left join SA1010 SA1 ON SA1.A1_COD = SD2.D2_CLIENTE AND SA1.A1_LOJA = SD2.D2_LOJA AND SA1.D_E_L_E_T_ =' '
 		left join NNR010 NNR ON NNR.NNR_CODIGO = SD2.D2_LOCAL AND NNR.NNR_FILIAL =SD2.D2_FILIAL AND NNR.D_E_L_E_T_ =' '
+		left join SA3010 SA3 ON SA3.A3_COD = SC5.C5_VEND1 AND SA3.D_E_L_E_T_=' '
 		WHERE SD2.D_E_L_E_T_ =' ' and SD2.D2_ESPECIE  = 'NF'
 		%Exp:Femisao%	
 	EndSql
@@ -120,6 +123,9 @@ objClientes := JsonObject():new()
 		objClientes['VENCTO']	:= ALLTRIM((OrdenConsul)->VENCTO)
 		objClientes['CANTIDAD']	:= (OrdenConsul)->CANTIDAD
 		objClientes['NOMBRE_EDV']	:= ALLTRIM((OrdenConsul)->NOMBRE_EDV)
+		objClientes['CELULAR_EDV']	:= ALLTRIM((OrdenConsul)->CELULAR_EDV)
+		objClientes['EMAIL_EDV'] :=ALLTRIM((OrdenConsul)->EMAIL_EDV)
+		objClientes['CONTACTO_NOTIFICACION'] := "69122029"
 		aadd(aClientes,objClientes)
 		(OrdenConsul)->(dbSkip())
 	END
